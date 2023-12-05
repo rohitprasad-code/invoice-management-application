@@ -1,0 +1,50 @@
+package com.highradius.servlets;
+
+import com.highradius.implementation.InvoiceDaoImpl;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/DeleteServlet")
+public class DeleteServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public DeleteServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.getWriter().write("customerOrderID is received.");
+
+        InvoiceDaoImpl invoiceDaoImpl = new InvoiceDaoImpl();
+
+        String customerOrderIDParam = request.getParameter("customerOrderID");
+        if (customerOrderIDParam != null && !customerOrderIDParam.isEmpty()) {
+            int customerOrderID = Integer.parseInt(customerOrderIDParam);
+
+            // Delete the invoice from the database
+            invoiceDaoImpl.deleteInvoice(String.valueOf(customerOrderID));
+
+            // Set the response type
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+
+            // Send the response
+            response.setStatus(HttpServletResponse.SC_OK); 
+            response.getWriter().write("Invoice deleted successfully.");
+        } else {
+            // Handle the case when customerOrderID is not provided
+            // You can send an appropriate error response or take necessary action based on your requirements
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Invalid customerOrderID provided.");
+        }
+    }
+
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSON Data</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Make an AJAX request to fetch the JSON data
+            $.ajax({
+                url: 'ReadServlet',
+                dataType: 'json',
+                success: function(data) {
+                    // Process the JSON data and display it on the page
+                    var html = '';
+                    for (var i = 0; i < data.length; i++) {
+                        html += '<p>Invoice ID: ' + data[i].slNo + '</p>';
+                        html += '<p>Customer Order ID: ' + data[i].customerOrderID + '</p>';
+                        html += '<p>Sales Org: ' + data[i].salesOrg + '</p>';
+                        // Add more fields as needed
+                        html += '<hr>';
+                    }
+                    $('#json-data').html(html);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="json-data">
+        <!-- JSON data will be displayed here -->
+    </div>
+</body>
+</html>

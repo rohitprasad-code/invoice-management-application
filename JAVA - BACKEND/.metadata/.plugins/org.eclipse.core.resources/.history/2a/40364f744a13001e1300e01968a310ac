@@ -1,0 +1,54 @@
+package com.highradius.servlets;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.highradius.implementation.InvoiceDaoImpl;
+import com.highradius.model.Invoice;
+import com.google.gson.Gson;
+
+/**
+ * Servlet implementation class SearchServlet
+ */
+@WebServlet("/SearchServlet")
+public class SearchServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    public SearchServlet() {
+        super();
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // TODO: Implement doGet if needed
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // Read the request body to get the customerOrderID
+        String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        JsonObject jsonObject = new Gson().fromJson(requestBody, JsonObject.class);
+        int customerOrderID = jsonObject.get("customerOrderID").getAsInt();
+
+        InvoiceDaoImpl invoiceDaoImpl = new InvoiceDaoImpl();
+        List<Invoice> invoices = invoiceDaoImpl.searchInvoice(String.valueOf(customerOrderID));
+
+        // Convert the invoice list to JSON format
+        String json = new Gson().toJson(invoices);
+
+        PrintWriter out = response.getWriter();
+        out.print(json);
+        out.flush();
+    }
+}
